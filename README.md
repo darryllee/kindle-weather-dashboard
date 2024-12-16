@@ -1,19 +1,29 @@
 # kindle-weather-dashboard
 
-Simple webpage with weather information.
+This fork of https://github.com/matopeto/kindle-weather-dashboard lets you show
+a 4-day weather forecast instead of the next 12 hours.
 
-# Try it!
+# NOTICE
 
-Go to: http://kindle.hrincar.eu/weather/ and that's it!
+_This fork depends on the Open Weather One Call API 3.0, which allows for 
+1000 calls/day for free. But you must give them a credit card and subscribe._
 
-or you can install it on your own server, customize it, or run it locally on your Kindle.
+The subscription page lets you restrict your calls/day to 1000 so you 
+should never be charged. Also this script only updates every 2 hours.
 
-_Please, if you use this website, generate your free OWM token (see: https://openweathermap.org/api for more info), because the default token can be blocked and changed at any time and the weather forecast can stop working._
+* [One Call API 3.0 | https://openweathermap.org/api/one-call-3]
+* [One Call Subscription Details | https://openweathermap.org/full-price]
+
+We only support Lat/Lon (ex: `lat=50&lon=14`) because 
+that's the API 3.0 supports. We do use the reverse geolocation API to 
+get the city, so it's certainly possible to fix the url query code to
+use the forward geolocation API to lookup city. But I'm already out of
+my depth with this hack. :-}
 
 ## Features
 
 * **current weather and temperature**
-* **forecast for the next 12 hours**, in landscape mode for **15 hours**
+* **forecast for the next 4 days**, in landscape mode for **5 days**
 * **sunrise and sunset**
 * **Moon phase**
 
@@ -59,8 +69,9 @@ create a config.js file from config.js.sample and set variables:
 See more: http://openweathermap.org/current and http://openweathermap.org/forecast5
 
 ### with url query parameters
+
 * `appId` sets the appId
-* `city` sets the city (e.g. `city=Paris`)
+* `city` sets the city (e.g. `city=Paris`) ** UNSUPPORTED **
 * `lat`, `lon` set location (e.g. `lat=50&lon=14`)
 * `lang` and `units` for language and units :)
 * `rotation` sets the rotation :)
