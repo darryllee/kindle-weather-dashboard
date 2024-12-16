@@ -11,14 +11,14 @@ _This fork depends on the Open Weather One Call API 3.0, which allows for
 The subscription page lets you restrict your calls/day to 1000 so you 
 should never be charged. Also this script only updates every 2 hours.
 
-* [One Call API 3.0 | https://openweathermap.org/api/one-call-3]
-* [One Call Subscription Details | https://openweathermap.org/full-price]
+* [One Call API 3.0](https://openweathermap.org/api/one-call-3)
+* [One Call Subscription Details](https://openweathermap.org/full-price)
 
-We only support Lat/Lon (ex: `lat=50&lon=14`) because 
-that's the API 3.0 supports. We do use the reverse geolocation API to 
-get the city, so it's certainly possible to fix the url query code to
-use the forward geolocation API to lookup city. But I'm already out of
-my depth with this hack. :-}
+The hack only supports Lat/Lon (ex: `lat=50&lon=14`), because 
+the One Call API doesn't support city lookups. We do use the reverse 
+geolocation API to get the city from Lat/Lon, so it's certainly possible 
+to fix the code to use the forward geolocation API to lookup city. 
+But I'm already out of my depth with this hack. :-}
 
 ## Features
 
