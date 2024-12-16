@@ -75,38 +75,51 @@
         }
 
         function refreshForecastWeather() {
-            jsonp.request(apiProtocol + "//api.openweathermap.org/data/2.5/forecast?" + _apiParams + "&callback=jsonp.response" + "&_timestamp=" + (new Date()).getTime()
+            jsonp.request(apiProtocol + "//api.openweathermap.org/data/3.0/onecall?" + _apiParams + "&callback=jsonp.response" + "&_timestamp=" + (new Date()).getTime()
                 , function (data) {
                     processForecastWeather(data);
                 }, "forecast");
+        }
+
+        function refreshGeolat() {
+            jsonp.request(apiProtocol + "//api.openweathermap.org/geo/1.0/reverse?" + _apiParams + "&callback=jsonp.response" + "&_timestamp=" + (new Date()).getTime()
+                , function (data) {
+                    processGeo(data)
+                }, "geo");
+        }
+
+        function processGeo(data) {
+            city.innerHTML = data[0].name;
+            console.log(data[0].name)
         }
 
         function refreshData() {
             setNightMode();
             refreshActualWeather();
             refreshForecastWeather();
+            refreshGeo();
 
             window.setTimeout("refreshData()", refreshTime);
         }
 
         function processForecastWeather(data) {
-            dataTimeZone = data.city.timezone
+            dataTimeZone = data.timezone
 
             for (var i = 0; i < forecastCount; i++) {
-                var forecast = data.list[i];
+                var forecast = data.daily[i];
 
                 var feelsLike = tempType == "feelsLike";
 
-                forecastsCells[i].temp.innerHTML = (feelsLike ? Math.round(forecast.main.feels_like) : Math.round(forecast.main.temp)) + unitsSymbolHtml;
+                forecastsCells[i].temp.innerHTML = (feelsLike ? Math.round(forecast.temp.feels_like) : Math.round(forecast.temp.day)) + unitsSymbolHtml;
                 forecastsCells[i].icon.className = getIconClassName(forecast.weather[0], new Date(forecast.dt * 1000));
                 forecastsCells[i].desc.innerHTML = forecast.weather[0].description;
-                forecastsCells[i].time.innerHTML = momentWithCorrectUtcOffset(new Date(forecast.dt * 1000)).format(timeFormat);
+                forecastsCells[i].time.innerHTML = momentWithCorrectUtcOffset(new Date(forecast.dt * 1000)).format(dateFormat);
                 forecastsCells[i].temp.className = feelsLike ? "colTemp feelsLike" : "colTemp";
                 forecastsCells[i].icon.style.transform = null;
                 forecastsCells[i].icon.style.webkitTransform = null;
             }
 
-            setMoonIconsRotation(data.city.coord.lat)
+            setMoonIconsRotation(data.lat)
         }
 
         function getIconClassName(weather, date) {
@@ -181,6 +194,12 @@
                 url += "&units=" + units;
             }
 
+            var exclude = 'minutely,hourly,alerts'
+            if (exclude) {
+                url += "&exclude=" + exclude;
+            }
+
+
             setsUnitsSymbolFromApiUrl(url)
             return url;
         }
@@ -207,7 +226,6 @@
             icon.style.webkitTransform = null;
             temp.innerHTML = feelsLike ? Math.round(data.main.feels_like) : Math.round(data.main.temp);
             temp.className = feelsLike ? "feelsLike" : "";
-            city.innerHTML = data.name;
             description.innerHTML = data.weather[0].description;
             lastUpdate.innerHTML = momentWithCorrectUtcOffset(new Date()).format(timeFormat) + "/" + momentWithCorrectUtcOffset(new Date(data.dt * 1000)).format(timeFormat);
 
@@ -326,7 +344,8 @@
             ["wi-moon-alt-waning-crescent-6","wi-moon-alt-waxing-gibbous-6"],
         ];
 
-        var timeFormat = "HH:mm";
+        var timeFormat = "HH:mm"
+        var dateFormat = "ddd"
 
         // Config parameters.
         var api_params, api_appId, api_lang, api_units, api_locParams, rotation, night_mode, refreshTime, utcOffset, tempType;
